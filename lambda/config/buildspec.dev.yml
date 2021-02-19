@@ -19,4 +19,4 @@ phases:
 
 cache:
   paths:
-    - "frontend/node_modules/**/*"
+    - "lambda/node_modules/**/*"

@@ -20,10 +20,10 @@ phases:
 
 cache:
   paths:
-    - "frontend/node_modules/**/*"
+    - "my-serverless/node_modules/**/*"
 
 artifacts:
   files:
     - "**/*"
-  base-directory: "frontend/build*"
+  base-directory: "my-serverless/build*"
   discard-paths: no
