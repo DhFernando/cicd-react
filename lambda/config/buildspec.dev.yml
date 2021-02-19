@@ -8,7 +8,7 @@ phases:
       - echo Installing serverless
       - npm install -g serverless
       - echo Installing API dependancies
-      - cd backend
+      - cd lambda
       - npm install --silent
       - echo Finished installing todo API dependencies
   build:
