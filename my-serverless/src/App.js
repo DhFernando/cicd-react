@@ -7,7 +7,13 @@ const App = () => {
 
   useEffect(async () => {
     try{
-      const res = await axios.post('https://dyk1f3qg7e.execute-api.us-east-2.amazonaws.com/dev/user/create',{})
+      const res = await axios.post('https://dyk1f3qg7e.execute-api.us-east-2.amazonaws.com/dev/user/create',{},{
+        headers: {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*"
+        }
+      })
       if(res){
         console.log(res)
       }
@@ -23,7 +29,7 @@ const App = () => {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          This is worked
+          Edit <code>src/App.js</code> and save to reload.
         </p>
         <a
           className="App-link"
