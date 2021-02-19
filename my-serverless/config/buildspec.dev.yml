@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+    commands:
+      - echo Installing Web dependencies
+      - cd my-serverless
+      - npm install --silent
+      - echo Finished installing Web dependencies
+  build:
+    commands: 
+      - echo Building artifacts
+      - npm run build
+      - echo Deploying artifacts
+      - npm run deploy-dev
+      - echo Invalidating cloudfront cache
+      - npm run cache-bust-dev
+
+cache:
+  paths:
+    - "frontend/node_modules/**/*"
+
+artifacts:
+  files:
+    - "**/*"
+  base-directory: "frontend/build*"
+  discard-paths: no
