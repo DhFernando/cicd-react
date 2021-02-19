@@ -7,7 +7,7 @@ const App = () => {
 
   useEffect(async () => {
     try{
-      const res = await axios.post('user/create',{})
+      const res = await axios.post('https://dyk1f3qg7e.execute-api.us-east-2.amazonaws.com/dev/user/create',{})
       if(res){
         console.log(res)
       }
