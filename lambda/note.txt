@@ -1,0 +1,106 @@
+service: practicle
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+
+# you can overwrite defaults here
+  stage: dev
+  region: us-east-2
+  environment:
+    bucketName: ${self:custom.bucketName}
+
+# you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - s3:*
+        - ses:*
+      Resource: '*' 
+
+plugins:
+  - serverless-s3-sync
+  - serverless-webpack
+
+package:
+  individually: true
+
+custom:
+  bucketName: practicle-dev-serverlessdeploymentbucket-12ci2k540kmbzabs
+  s3Sync:
+    - bucketName: ${self:custom.bucketName}
+      localDir: UploadData
+
+functions:
+  hello:
+    handler: handler.hello 
+    events:
+      - http:
+          path: user/create
+          method: POST
+          cors: true
+          # private: true
+  createFile:
+    handler: createFile.handler 
+    events:
+      - http:
+          path: create-file/{fileName}
+          method: POST
+          cors: true
+  sendEmail:
+    handler: sendEmail.handler 
+    events:
+      - http:
+          path: send-email
+          method: POST
+          cors: true
+  getFile:
+    handler: getFile.handler 
+    events:
+      - http:
+          path: get-file/{fileName}
+          method: GET
+          cors: true
+
+
+# you can add CloudFormation resource templates here
+resources:
+  Resources:
+    DemoBucketUpload:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.bucketName}
+    
+    MyAssumeRole:
+      Type: AWS::IAM::Role      
+      Properties: 
+        Path: /
+        RoleName: myassumerole
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17" 
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+                  - apigateway.amazonaws.com
+                  - ses.amazonaws.com
+              Action:
+                - sts:AssumeRole
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:provider.stage}-user-pool
+        UsernameAttributes: 
+          - email
+        AutoVerifiedAttributes:
+          - email
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:provider.stage}-user-pool-client
+        UserPoolId:
+          Ref: CognitoUserPool
+        ExplicitAuthFlows:
+          - ADMIN_NO_SRP_AUTH
+        GenerateSecret: false

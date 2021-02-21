@@ -1,41 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import logo from './logo.svg';
 import './App.css';
-import axios from 'axios'
+import Amplify from 'aws-amplify';
+import awsconfig from './aws-exports';
+import { withAuthenticator } from '@aws-amplify/ui-react'
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom'
+
+import Header from './components/Header'
+import Todo from './components/Todo'
+
+Amplify.configure(awsconfig)
 
 const App = () => {
-
-  useEffect(async () => {
-    try{
-      const res = await axios.post('user/create',{})
-      if(res){
-        console.log(res)
-      }
-      console.log("work")
-    }catch(e){
-       console.log(e)
-    }
-      
-  })
-
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          OH no ... Serverless Works :)
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header className="App-header"> 
+        <Router>
+          <Header />
+
+            <Switch>
+              <Route exact path="/" component={ Todo } />
+            </Switch>
+        
+        </Router>
       </header>
     </div>
   );
 }
 
-export default App;
+export default withAuthenticator(App);
