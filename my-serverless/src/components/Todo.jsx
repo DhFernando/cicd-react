@@ -9,7 +9,7 @@ function Todo() {
             const res = await Auth.currentAuthenticatedUser()
             setCreatorEmail(res.attributes.email)
             setCreatorId( res.attributes.sub )
-            const todos = await axios.get(`https://lhy4zpwo4k.execute-api.us-east-2.amazonaws.com/dev/todo/get/${res.attributes.sub}`)
+            const todos = await axios.get(`/todo/get/${res.attributes.sub}`)
             setTodos([...todos.data.todos])
         })()
     },[])
@@ -32,8 +32,8 @@ function Todo() {
             setTodo('')
 
             try{
-                const res = await axios.post("https://lhy4zpwo4k.execute-api.us-east-2.amazonaws.com/dev/todo/create",dataObj)
-                const todos = await axios.get(`https://lhy4zpwo4k.execute-api.us-east-2.amazonaws.com/dev/todo/get/${creatorId}`)
+                const res = await axios.post("/todo/create",dataObj)
+                const todos = await axios.get(`/todo/get/${creatorId}`)
                 setTodos([...todos.data.todos])
                 alert(res.data.message)
 
@@ -54,8 +54,8 @@ function Todo() {
 
     const deleteTodo = async (_id) =>{
         try{
-            const res = await axios.delete(`https://lhy4zpwo4k.execute-api.us-east-2.amazonaws.com/dev/todo/remove/${_id}`)
-            const todos = await axios.get(`https://lhy4zpwo4k.execute-api.us-east-2.amazonaws.com/dev/todo/get/${creatorId}`)
+            const res = await axios.delete(`/todo/remove/${_id}`)
+            const todos = await axios.get(`/todo/get/${creatorId}`)
             setTodos([...todos.data.todos])
             alert(res.data.message)
         }catch(e){
